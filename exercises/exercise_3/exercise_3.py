@@ -1,53 +1,39 @@
+"""Calculates power consumption of multiple vehicles.
 
-class Vehicle:
-    def __init__(self, brand, mass, dc, rrc, v, cs, p):
-        self.brand = brand
-        self.mass = mass
-        self.dc = dc
-        self.rrc = rrc
-        self.v = v
-        self.cs = cs
-        self.p = p
-        
-
-    def calculate_power_consumption(self):
-        air_resistance_power = (
-            0.5
-            *self.p
-            * self.dc
-            * self.cs
-            * self.v / 3.6
-        )
-
-        rolling_resistance_power = (
-            self.rrc
-            * self.mass
-            * 9.81
-            * (self.v / 3.6)
-        )
-
-        required_power = (air_resistance_power + rolling_resistance_power) / 1000
+Note:
+    This is just one potential solution. Of course 
+    there are other possible solutions.
     
-    def energy_efficiency(self):
-        if required_power == 0:
-            
+"""
+from vehicle import Vehicle
 
-        return required_power
-
-bmw = Vehicle("BMW", 2000, 0.9, 0.415, 80, 30, 1.205)
-audi = Vehicle("Audi", 1300, 0.41, 0.018, 85, 1.61, 1.205)
-
-bmw_power = bmw.calculate_power_consumption()
-audi_power = audi.calculate_power_consumption()
-
-print("BMW power:", bmw_power, end="")
-print("[kW]")
-print("Audi power:", audi_power, end="")
-print("[kW]")
+ENERGY_EFFICIENCY_THRESHOLD_WATTS = 10_000
 
 
+def check_power_consumption(power_consumption):
+    if power_consumption < ENERGY_EFFICIENCY_THRESHOLD_WATTS:
+        print("Vehicle is energy-efficient")
+    else:
+        print("Vehicle is not energy-efficient")
 
 
-    
+if __name__ == "__main__":
+    vehicle = Vehicle(
+        brand="Ford",
+        model="Fusion",
+        mass_kg=1500,
+        drag_coefficient=0.31,
+        cross_sectional_area_m2=1.97,
+        rolling_resistance_coefficient=0.015,
+    )
 
+    power_consumption = vehicle.calc_power_consumption(
+        speed_kph=80, air_density_kg_per_m3=1.204
+    )
+    check_power_consumption(power_consumption)
 
+    vehicle.change_tyre(new_rolling_resistance_coefficient=0.02)
+    power_consumption_after_tyre_change = vehicle.calc_power_consumption(
+        speed_kph=80, air_density_kg_per_m3=1.204
+    )
+    check_power_consumption(power_consumption_after_tyre_change)
